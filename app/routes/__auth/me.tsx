@@ -17,15 +17,7 @@ export const action = async ({ request }: ActionArgs) => {
   const response = new Response();
   const { method } = request;
   const form = await request.formData();
-  const formData: Record<string, string> = {};
-
-  for (const pair of form.entries()) {
-    const [key, value] = pair;
-
-    if (value) {
-      formData[key] = value as string;
-    }
-  }
+  const formData = Object.fromEntries(form);
 
   const { id, ...sendData } = formData;
 
