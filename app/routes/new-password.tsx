@@ -1,6 +1,6 @@
 import type { ActionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import { Form } from '@remix-run/react';
 import { createServerClient } from '@supabase/auth-helpers-remix';
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@utils/constants/supabase';
 
@@ -14,8 +14,6 @@ export const action = async ({ request }: ActionArgs) => {
   const form = await request.formData();
   const email = form.get('email');
   const password = form.get('password');
-
-  console.log({ email, password });
 
   if (!email) {
     return json({ error: 'Email is required' });
@@ -34,15 +32,15 @@ export const action = async ({ request }: ActionArgs) => {
     return json({ error: error.message });
   }
 
+  // TODO: Show success message instead ?? I don't
+  // really know what happens
   return redirect('/me');
 };
 
 const Login = () => {
-  const actionData = useActionData<typeof action>();
-  console.log(actionData);
   return (
     <main>
-      <h1>Login</h1>
+      <h1>New password</h1>
 
       <Form method="post">
         <input name="email" type="text" placeholder="email" />

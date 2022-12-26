@@ -5,6 +5,7 @@ import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@utils/constants/supabase';
 import { createServerClient } from '@utils/helpers/supabase.server';
 import { useEffect, useState } from 'react';
 
+import { Nav } from '@components/Nav';
 import type { LoaderArgs } from '@remix-run/node';
 import { redirect } from '@remix-run/node';
 import type { Session, SupabaseClient } from '@supabase/auth-helpers-remix';
@@ -67,6 +68,10 @@ export default function Supabase() {
     createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY)
   );
 
+  const signOut = () => {
+    return supabase.auth.signOut();
+  };
+
   const serverAccessToken = session?.access_token;
 
   useEffect(() => {
@@ -90,9 +95,7 @@ export default function Supabase() {
 
   return (
     <>
-      <div>I'm the nav</div>
-      {/* <Login supabase={supabase} session={session} />
-      <Nav /> */}
+      <Nav signOut={signOut} loggedIn={Boolean(session)} />
       <Outlet context={{ supabase, session }} />
     </>
   );

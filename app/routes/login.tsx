@@ -1,6 +1,6 @@
 import type { ActionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, useActionData } from '@remix-run/react';
+import { Form, Link, useActionData } from '@remix-run/react';
 import { createServerClient } from '@supabase/auth-helpers-remix';
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@utils/constants/supabase';
 
@@ -14,8 +14,6 @@ export const action = async ({ request }: ActionArgs) => {
   const form = await request.formData();
   const email = form.get('email');
   const password = form.get('password');
-
-  console.log({ email, password });
 
   if (!email) {
     return json({ error: 'Email is required' });
@@ -40,8 +38,8 @@ export const action = async ({ request }: ActionArgs) => {
 };
 
 const Login = () => {
-  const actionData = useActionData<typeof action>();
-  console.log({ actionData });
+  const { error } = useActionData<typeof action>() ?? {};
+
   return (
     <main>
       <h1>Login</h1>
@@ -50,6 +48,10 @@ const Login = () => {
         <input name="email" type="text" placeholder="email" />
         <input name="password" type="password" placeholder="password" />
         <button type="submit">Submit</button>
+        <p>
+          <Link to="/new-password">Forgot password</Link>
+        </p>
+        {error ? <p>{error}</p> : null}
       </Form>
     </main>
   );

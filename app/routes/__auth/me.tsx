@@ -91,6 +91,7 @@ const Me = () => {
   const { error: actionError } = useActionData<typeof action>() ?? {};
   const { id: userId } = session?.user ?? {};
   const { state } = useTransition();
+
   const submitting = state === 'submitting';
 
   return (

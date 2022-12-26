@@ -39,6 +39,8 @@ export const action = async ({ request }: ActionArgs) => {
     return json({ error: error.message });
   }
 
+  // TODO: show success state with message about email
+  // confirmation
   return redirect('/me', {
     headers: response.headers,
   });
