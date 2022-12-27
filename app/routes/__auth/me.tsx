@@ -9,9 +9,7 @@ import {
   useTransition,
 } from '@remix-run/react';
 import type { SupabaseContext } from '@routes/__auth';
-import { createServerClient } from '@supabase/auth-helpers-remix';
-import type { Database } from '@types.generated';
-import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@utils/constants/supabase';
+import { createServerClient } from '@utils/helpers/supabase.server';
 
 export const action = async ({ request }: ActionArgs) => {
   const response = new Response();
@@ -21,10 +19,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const { id, ...sendData } = formData;
 
-  const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    request,
-    response,
-  });
+  const supabase = createServerClient({ request, response });
 
   let data = null;
   let error = null;
@@ -42,10 +37,7 @@ export const action = async ({ request }: ActionArgs) => {
   }
 
   if (method === 'PATCH') {
-    const update = await supabase
-      .from('profile')
-      .update([sendData])
-      .eq('id', id);
+    const update = await supabase.from('profile').update(sendData).eq('id', id);
 
     if (update.data) {
       data = update.data;
@@ -61,14 +53,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export const loader = async ({ request }: LoaderArgs) => {
   const response = new Response();
-  const supabase = createServerClient<Database>(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY,
-    {
-      request,
-      response,
-    }
-  );
+  const supabase = createServerClient({ request, response });
 
   const {
     data: { session },
@@ -76,7 +61,14 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const { data: profile } = await supabase
     .from('profile')
-    .select('id, slug, display_name')
+    .select(
+      `
+      id, 
+      slug,
+      display_name,
+      link(id, display_text, url)
+      `
+    )
     .eq('user', session?.user.id)
     .single();
 
@@ -87,8 +79,8 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 const Me = () => {
   const { profile } = useLoaderData<typeof loader>();
-  const { session } = useOutletContext<SupabaseContext>();
   const { error: actionError } = useActionData<typeof action>() ?? {};
+  const { session } = useOutletContext<SupabaseContext>();
   const { id: userId } = session?.user ?? {};
   const { state } = useTransition();
 
@@ -96,9 +88,8 @@ const Me = () => {
 
   return (
     <main>
-      {profile?.slug ? (
-        <Link to={`/${profile.slug}`}>View my profile</Link>
-      ) : null}
+      {profile?.slug ? <Link to={`/${profile.slug}`}>View my tree</Link> : null}
+      <h1>{profile ? 'Edit' : 'Create'} my tree</h1>
       <Form method={profile ? 'patch' : 'post'}>
         <input type="hidden" name="user" value={userId} />
         <input type="hidden" name="id" value={profile?.id} />

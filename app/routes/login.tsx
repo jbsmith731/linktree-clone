@@ -1,15 +1,11 @@
 import type { ActionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, Link, useActionData } from '@remix-run/react';
-import { createServerClient } from '@supabase/auth-helpers-remix';
-import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@utils/constants/supabase';
+import { Form, Link, useActionData, useTransition } from '@remix-run/react';
+import { createServerClient } from '@utils/helpers/supabase.server';
 
 export const action = async ({ request }: ActionArgs) => {
   const response = new Response();
-  const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    request,
-    response,
-  });
+  const supabase = createServerClient({ request, response });
 
   const form = await request.formData();
   const email = form.get('email');
@@ -39,6 +35,8 @@ export const action = async ({ request }: ActionArgs) => {
 
 const Login = () => {
   const { error } = useActionData<typeof action>() ?? {};
+  const { state } = useTransition();
+  const submitting = state === 'submitting';
 
   return (
     <main>
@@ -47,7 +45,9 @@ const Login = () => {
       <Form method="post">
         <input name="email" type="text" placeholder="email" />
         <input name="password" type="password" placeholder="password" />
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={submitting}>
+          {submitting ? 'Loading' : 'Login'}
+        </button>
         <p>
           <Link to="/new-password">Forgot password</Link>
         </p>

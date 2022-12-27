@@ -1,15 +1,11 @@
 import type { ActionArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
-import { createServerClient } from '@supabase/auth-helpers-remix';
-import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@utils/constants/supabase';
+import { createServerClient } from '@utils/helpers/supabase.server';
 
 export const action = async ({ request }: ActionArgs) => {
   const response = new Response();
-  const supabase = createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    request,
-    response,
-  });
+  const supabase = createServerClient({ request, response });
 
   const form = await request.formData();
   const email = form.get('email');
