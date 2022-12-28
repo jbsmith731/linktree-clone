@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/node';
+import type { LinksFunction, MetaFunction } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -7,6 +7,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react';
+import styles from './tailwind.css';
+
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -18,6 +21,15 @@ export default function App() {
   return (
     <html lang="en">
       <head>
+        <style>{`
+          @font-face {
+            font-family: 'GeneralSans';
+            src: url('../fonts/GeneralSans-Variable.woff2') format('woff2'),
+                font-weight: 200 700;
+                font-display: swap;
+                font-style: normal;
+          }
+        `}</style>
         <Meta />
         <Links />
       </head>
