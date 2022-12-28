@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
   Form,
@@ -74,6 +74,12 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   return {
     profile,
+  };
+};
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'My tree',
   };
 };
 

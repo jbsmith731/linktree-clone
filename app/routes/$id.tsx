@@ -1,5 +1,5 @@
-import type { LoaderArgs } from '@remix-run/node';
-import { json } from '@remix-run/node'; // change this import to whatever runtime you are using
+import type { LoaderArgs, MetaFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { createServerClient } from '@supabase/auth-helpers-remix';
 import type { Database } from '@types.generated';
@@ -36,6 +36,18 @@ export const loader = async ({ request, params }: LoaderArgs) => {
       headers: response.headers,
     }
   );
+};
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const { display_name } = data.data ?? {};
+
+  if (display_name) {
+    return {
+      title: display_name,
+    };
+  }
+
+  return {};
 };
 
 const Profile = () => {

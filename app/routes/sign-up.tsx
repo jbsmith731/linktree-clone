@@ -1,4 +1,4 @@
-import type { ActionArgs } from '@remix-run/node';
+import type { ActionArgs, MetaFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { createServerClient } from '@utils/helpers/supabase.server';
@@ -40,6 +40,12 @@ export const action = async ({ request }: ActionArgs) => {
   return redirect('/me', {
     headers: response.headers,
   });
+};
+
+export const meta: MetaFunction = () => {
+  return {
+    title: 'Sign up',
+  };
 };
 
 const Login = () => {
