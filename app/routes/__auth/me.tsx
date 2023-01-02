@@ -1,3 +1,7 @@
+import * as Input from '@components/Input';
+import { button } from '@primitives/button';
+import { formBase } from '@primitives/form-base';
+import { headingText } from '@primitives/heading-text';
 import type { ActionArgs, LoaderArgs, MetaFunction } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import {
@@ -93,29 +97,50 @@ const Me = () => {
   const submitting = state === 'submitting';
 
   return (
-    <main>
-      {profile?.slug ? <Link to={`/${profile.slug}`}>View my tree</Link> : null}
-      <h1>{profile ? 'Edit' : 'Create'} my tree</h1>
-      <Form method={profile ? 'patch' : 'post'}>
-        <input type="hidden" name="user" value={userId} />
-        <input type="hidden" name="id" value={profile?.id} />
-        <input
-          type="text"
-          name="slug"
-          placeholder="url"
-          defaultValue={profile?.slug ?? undefined}
-        />
-        <input
-          type="text"
-          name="display_name"
-          placeholder="display name"
-          defaultValue={profile?.display_name ?? undefined}
-        />
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Submiting' : 'Submit'}
-        </button>
-        {actionError ? <p>{actionError}</p> : null}
-      </Form>
+    <main className="py-20">
+      <div className="grid grid-flow-row gap-6 max-w-lg mx-auto">
+        <div className="grid grid-flow-row gap-1">
+          <h1 className={headingText({ size: 6 })}>
+            {profile ? 'Edit' : 'Create'} my tree
+          </h1>
+
+          {profile?.slug ? (
+            <Link to={`/${profile.slug}`}>View my tree</Link>
+          ) : null}
+        </div>
+
+        <Form className={formBase()} method={profile ? 'patch' : 'post'}>
+          <input type="hidden" name="user" value={userId} />
+          <input type="hidden" name="id" value={profile?.id} />
+          <Input.Root>
+            <Input.Label>Slug</Input.Label>
+            <Input.Input
+              type="text"
+              name="slug"
+              placeholder="url"
+              defaultValue={profile?.slug ?? undefined}
+            />
+          </Input.Root>
+
+          <Input.Root>
+            <Input.Label>Display Name</Input.Label>
+            <Input.Input
+              type="text"
+              name="display_name"
+              placeholder="display name"
+              defaultValue={profile?.display_name ?? undefined}
+            />
+          </Input.Root>
+          <button
+            className={button({ className: 'justify-self-start' })}
+            type="submit"
+            disabled={submitting}
+          >
+            {submitting ? 'Submiting' : 'Submit'}
+          </button>
+          {actionError ? <p>{actionError}</p> : null}
+        </Form>
+      </div>
     </main>
   );
 };

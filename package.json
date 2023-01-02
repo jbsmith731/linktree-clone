@@ -2,19 +2,27 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev",
+    "build": "run-s \"build:*\"",
+    "build:css": "npm run generate:css -- --minify",
+    "build:remix": "remix build",
+    "dev": "run-p \"dev:*\"",
+    "dev:css": "npm run generate:css -- --watch",
+    "dev:remix": "remix dev",
+    "generate:css": "npx tailwindcss -o ./app/tailwind.css",
+    "start": "remix-serve build",
     "typecheck": "tsc -b",
     "gen": "eval $(grep SUPABASE_ID .env) && supabase gen types typescript --project-id $SUPABASE_ID > ./app/types.generated.ts",
     "format": "prettier --write 'app/**/*.{ts,tsx}'"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.0.0",
     "@remix-run/node": "^1.9.0",
     "@remix-run/react": "^1.9.0",
     "@remix-run/vercel": "^1.9.0",
     "@supabase/auth-helpers-remix": "^0.1.3",
     "@supabase/supabase-js": "^2.2.1",
     "@vercel/node": "^2.6.2",
+    "cva": "npm:class-variance-authority",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -26,9 +34,11 @@
     "@types/react-dom": "^18.0.8",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.5.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.8.1",
     "prettier-plugin-organize-imports": "^3.2.1",
     "supabase": "^1.27.7",
+    "tailwindcss": "^3.2.4",
     "typescript": "^4.8.4"
   },
   "engines": {
