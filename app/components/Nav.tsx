@@ -1,3 +1,4 @@
+import { textButton } from '@primitives/button';
 import type { TypedSupabaseClient } from '@routes/__auth';
 
 type NavProps = {
@@ -7,9 +8,13 @@ type NavProps = {
 
 export const Nav = ({ signOut, loggedIn }: NavProps) => {
   return (
-    <header>
-      Link Tree Clone
-      {loggedIn ? <button onClick={signOut}>Logout</button> : null}
+    <header className="flex justify-between">
+      🔗🌳 Clone
+      {loggedIn ? (
+        <button className={textButton()} onClick={signOut}>
+          Logout
+        </button>
+      ) : null}
     </header>
   );
 };

@@ -1,3 +1,9 @@
+import * as Input from '@components/Input';
+import { button } from '@primitives/button';
+import { errorText } from '@primitives/error-text';
+import { formBase } from '@primitives/form-base';
+import { headingText } from '@primitives/heading-text';
+
 import type { ActionArgs, MetaFunction } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, Link, useActionData, useTransition } from '@remix-run/react';
@@ -45,20 +51,42 @@ const Login = () => {
   const submitting = state === 'submitting';
 
   return (
-    <main>
-      <h1>Login</h1>
+    <main className="h-screen flex bg-slate-100 px-4">
+      <div className="m-auto grid grid-flow-row gap-6 max-w-md w-full">
+        <h1 className={headingText({ size: 6 })}>Login</h1>
+        <Form
+          method="post"
+          className={formBase({
+            className:
+              'max-w-md px-4 py-8 md:p-10 m-auto w-full bg-white rounded-xl shadow-lg',
+          })}
+        >
+          <Input.Root>
+            <Input.Label>Email</Input.Label>
+            <Input.Input name="email" type="text" placeholder="email" />
+          </Input.Root>
 
-      <Form method="post">
-        <input name="email" type="text" placeholder="email" />
-        <input name="password" type="password" placeholder="password" />
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Loading' : 'Login'}
-        </button>
-        <p>
-          <Link to="/new-password">Forgot password</Link>
-        </p>
-        {error ? <p>{error}</p> : null}
-      </Form>
+          <Input.Root>
+            <Input.Label>Password</Input.Label>
+            <Input.Input
+              name="password"
+              type="password"
+              placeholder="password"
+            />
+          </Input.Root>
+
+          {error ? <p className={errorText()}>{error}</p> : null}
+          <button className={button()} type="submit" disabled={submitting}>
+            {submitting ? 'Loading' : 'Login'}
+          </button>
+
+          <small className="text-sm">
+            <Link className="underline hover:text-blue-700" to="/new-password">
+              Forgot password
+            </Link>
+          </small>
+        </Form>
+      </div>
     </main>
   );
 };

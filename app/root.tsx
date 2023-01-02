@@ -13,7 +13,7 @@ export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
-  title: 'New Remix App',
+  title: '🔗🌳',
   viewport: 'width=device-width,initial-scale=1',
 });
 
@@ -21,15 +21,18 @@ export default function App() {
   return (
     <html lang="en">
       <head>
-        <style>{`
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           @font-face {
             font-family: 'GeneralSans';
-            src: url('../fonts/GeneralSans-Variable.woff2') format('woff2'),
+            src: url('./fonts/GeneralSans-Variable.woff2') format('woff2');
                 font-weight: 200 700;
                 font-display: swap;
                 font-style: normal;
-          }
-        `}</style>
+          }`,
+          }}
+        />
         <Meta />
         <Links />
       </head>
